@@ -18,7 +18,9 @@
   },
   "homepage": "https://github.com/juliendiot42/SlackAutoTranslate#readme",
   "dependencies": {
+    "@slack/bolt": "^3.3.0",
     "detect-rpi": "^1.4.0",
+    "dotenv": "^8.2.0",
     "puppeteer": "^8.0.0"
   }
 }
