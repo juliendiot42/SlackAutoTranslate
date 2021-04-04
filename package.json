@@ -16,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/juliendiot42/SlackAutoTranslate/issues"
   },
-  "homepage": "https://github.com/juliendiot42/SlackAutoTranslate#readme"
+  "homepage": "https://github.com/juliendiot42/SlackAutoTranslate#readme",
+  "dependencies": {
+    "detect-rpi": "^1.4.0",
+    "puppeteer": "^8.0.0"
+  }
 }
