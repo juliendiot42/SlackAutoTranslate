@@ -3,8 +3,8 @@ const translate = require("./translate.js");
 
 const { App } = require("@slack/bolt");
 
-const fromChannelid = "C01T89396G3";
-const toChannelid = "C01T51NUMSR";
+const fromChannelid = process.env.FROM_ID;
+const toChannelid = process.env.TO_ID;
 
 const app = new App({
   token: process.env.BOT_TOKEN,
