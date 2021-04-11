@@ -1,6 +1,5 @@
-require("dotenv").config();
+require("dotenv").config("./.env");
 const translate = require("./translate.js");
-
 const { App } = require("@slack/bolt");
 
 const fromChannelid = process.env.FROM_ID;
