@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 require("dotenv").config("./.env");
 const translate = require("./translate.js");
 const { App } = require("@slack/bolt");
