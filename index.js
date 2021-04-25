@@ -6,8 +6,9 @@ const detectLang = require("./detectLang.js");
 const { App } = require("@slack/bolt");
 
 var fromToTable = [
-  // { from: "general", to: "general-autotranslate" },
+  { from: "general", to: "general-autotranslate" },
   { from: "test-auto-translate", to: "test-auto-translate-2" },
+  { from: "random", to: "random-autotranslate" },
 ];
 
 const app = new App({
@@ -80,7 +81,7 @@ app.message(async ({ message, client }) => {
       // console.log("translate message");
       var fromLanguage = detectLang(
         (text = message.text),
-        (japPropThresh = 0.5),
+        (japPropThresh = 0.10),
         (verbose = true)
       );
     } catch (error) {
