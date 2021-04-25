@@ -1,99 +1,56 @@
-const puppeteer = require("puppeteer");
-const isPi = require("detect-rpi");
+const axios = require("axios");
 
-function sleep(milliseconds) {
-  const date = Date.now();
-  let currentDate = null;
-  do {
-    currentDate = Date.now();
-  } while (currentDate - date < milliseconds);
-}
-
-module.exports = async function (
-  fromLang,
-  toLang,
-  msg,
-  verbose = false,
-  headless = true
-) {
+module.exports = async function (fromLang, toLang, msg, verbose = false) {
   if (verbose) {
-    console.log("Translate: " + msg);
-    console.log("From: " + fromLang);
-    console.log("To: " + toLang);
+    console.log("translate -- Translate: " + msg);
+    console.log("translate -- From: " + fromLang);
+    console.log("translate -- To: " + toLang);
   }
 
-  if (isPi()) {
-    var browser = await puppeteer.launch({
-      headless: headless,
-      executablePath: "/usr/bin/chromium-browser",
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    });
-  } else {
-    var browser = await puppeteer.launch({ headless: headless });
-  }
+  let postReq = await axios({
+    method: "post",
+    url: "https://api-free.deepl.com/v2/translate",
+    params: {
+      auth_key: process.env.DEEPLKEY,
+      source_lang: fromLang,
+      target_lang: toLang,
+      text: msg,
+    },
+  });
 
-  const page = await browser.newPage();
-  await page.goto("https://www.deepl.com/translator");
-
-  // write message
-  await page.keyboard.type(msg);
-
-  // select to language:
-  const toLangSelect = await page.$('[dl-test="translator-target-lang-btn"]');
-  //   console.log(toLangSelect);
-  if (toLangSelect) {
-    await toLangSelect.click();
-    const [toLangBut] = await page.$x(
-      "//button[contains(., '" + toLang + "')]"
-    );
-    sleep(100);
-    if (toLangBut) {
-      await toLangBut.click();
-    }
-  }
-  sleep(500);
-
-  // select from language:
-  const fromLangSelect = await page.$('[dl-test="translator-source-lang-btn"]');
-  //   console.log(fromLangSelect);
-  if (fromLangSelect) {
-    await fromLangSelect.click();
-    const [fromLangBut] = await page.$x(
-      "//button[contains(., '" + fromLang + "')]"
-    );
-    if (fromLangBut) {
-      await fromLangBut.click();
-    }
-  }
-
-  sleep(5000);
-  // wait for response -- not working
-  //   const res = await page.waitForResponse("https://www2.deepl.com/jsonrpc");
-  //   if (res.ok()) {
-  //     // get translated message
-  //     console.log(res);
-  //     const translatedDiv = await page.$("#target-dummydiv"); //*[@id="target-dummydiv"]//*[@id="target-dummydiv"]
-  //     let transMsg = await page.evaluate((el) => el.textContent, translatedDiv);
-  //     console.log(transMsg);
-  //     await browser.close();
-  //   }
-
-  const translatedDiv = await page.$("#target-dummydiv"); //*[@id="target-dummydiv"]//*[@id="target-dummydiv"]
-  let transMsg = await page.evaluate((el) => el.textContent, translatedDiv);
-
-  // create response
   var resp = {
     from: fromLang,
     to: toLang,
     msg: msg,
-    transMsg: await transMsg,
+    transMsg: postReq.data.translations[0].text,
   };
 
-  // close browser
-  await browser.close();
-  // console.log(JSON.stringify(resp));
+  // console.log(resp);
+  // var transMsg = postReq.data.translations[0].text;
 
+  // console.log(transMsg);
+
+  // postReq.then(function (response) {
+  //   // console.log("translate -- " + response.data);
+  //   // console.log(typeof response.data);
+  //   var transMsg = response.data.translations[0].text;
+  //   // console.log("translate -- " + transMsg);
+  //   var resp = {
+  //     from: fromLang,
+  //     to: toLang,
+  //     msg: msg,
+  //     transMsg: transMsg,
+  //   };
+  // });
+
+  // create response
+
+  // // create response
+  // var resp = {
+  //   from: fromLang,
+  //   to: toLang,
+  //   msg: msg,
+  //   transMsg: "fast reply",
+  // };
   return resp;
-
-  // return output
 };
