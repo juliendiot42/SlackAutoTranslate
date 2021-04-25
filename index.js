@@ -5,9 +5,6 @@ const translate = require("./translate.js");
 const detectLang = require("./detectLang.js");
 const { App } = require("@slack/bolt");
 
-const fromChannelid = process.env.FROM_ID;
-const toChannelid = process.env.TO_ID;
-
 var fromToTable = [
   // { from: "general", to: "general-autotranslate" },
   { from: "test-auto-translate", to: "test-auto-translate-2" },
