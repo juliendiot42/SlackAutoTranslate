@@ -2,10 +2,16 @@
 
 require("dotenv").config("./.env");
 const translate = require("./translate.js");
+const detectLang = require("./detectLang.js");
 const { App } = require("@slack/bolt");
 
 const fromChannelid = process.env.FROM_ID;
 const toChannelid = process.env.TO_ID;
+
+var fromToTable = [
+  // { from: "general", to: "general-autotranslate" },
+  { from: "test-auto-translate", to: "test-auto-translate-2" },
+];
 
 const app = new App({
   token: process.env.BOT_TOKEN,
@@ -19,15 +25,50 @@ const app = new App({
 })();
 
 app.message(async ({ message, client }) => {
-  console.log(`Message received: ${JSON.stringify(message)}`);
+  console.log(`Message received`);
+  var msgKeys = Object.keys(message);
+
+  var skip = false;
+
+  if (msgKeys.includes("previous_message")) {
+    skip = true;
+  }
   // console.log(`Message received: ${message.text}`);
 
-  if (message.channel === fromChannelid) {
-    console.log(message.text);
+  if (!skip) {
+    // get id of post channel
+    try {
+      // get channel list
+      var chanList = await client.conversations.list({});
+
+      // get id of channels of interest
+      for (let i = 0; i < fromToTable.length; i++) {
+        fromToTable[i].fromId = chanList.channels.find(function (chan, index) {
+          if (chan.name == fromToTable[i].from) return true;
+        }).id;
+        fromToTable[i].toId = chanList.channels.find(function (chan, index) {
+          if (chan.name == fromToTable[i].to) return true;
+        }).id;
+      }
+    } catch (error) {
+      console.error(error);
+      var chanList = "Unidentified";
+    }
+
+    console.log(fromToTable);
+    // check if message come from channel of interest
+    var chanOfInterest = fromToTable.find(function (chan, index) {
+      if (chan.fromId == message.channel) return true;
+    });
+  }
+
+  if (typeof chanOfInterest !== "undefined" && !skip) {
+    console.log(`Message is:\n ${JSON.stringify(message)}`);
 
     // get sender information:
     try {
       // Call the users.info method using the WebClient
+      // console.log("get sender information:");
       var fromUser = await client.users.info({
         user: message.user,
       });
@@ -37,24 +78,42 @@ app.message(async ({ message, client }) => {
       var fromName = "Unidentified User";
     }
 
-    // translate message:
+    // Detect language:
     try {
-      var resp = await translate(
-        (fromLang = "Japanese"),
-        (toLang = "English"),
-        (msg = message.text),
-        (verbose = true),
-        (headless = true)
+      // console.log("translate message");
+      var fromLanguage = detectLang(
+        (text = message.text),
+        (japPropThresh = 0.5),
+        (verbose = true)
       );
-      console.log(JSON.stringify(resp));
+    } catch (error) {
+      console.error(error);
+      var fromLanguage = "language detection error";
+    }
+
+    // translate message:
+    if (fromLanguage === "JA") {
+      var toLang = "EN";
+      var postmsg = ` ---- DeepL API translation, from Japanese to English ----\n`;
+    } else {
+      var toLang = "JA";
+      var postmsg = ` ---- DeepL API translation, from English to Japanese ----\n`;
+    }
+
+    try {
+      // console.log("translate message");
+      var resp = await translate(
+        (fromLang = fromLanguage),
+        (toLang = toLang),
+        (msg = message.text)
+      );
+      console.log(`translation is:\n ${JSON.stringify(resp)}`);
     } catch (error) {
       console.error(error);
       var resp = { transMsg: "Error during translation" };
     }
-    // var resp = { transMsg: "fast return" };
 
     // post message:
-    var postmsg = `(DeepL translation):\n`;
     postmsg = postmsg.concat(`${resp.transMsg}`);
 
     // detect attatchment:
@@ -64,12 +123,14 @@ app.message(async ({ message, client }) => {
 
     let result = await client.chat.postMessage({
       text: postmsg,
-      channel: toChannelid,
+      channel: chanOfInterest.toId,
       // as_user: false,
       username: `AutoTranslate: ${fromUser.user.profile.display_name}`,
       icon_url: fromUser.user.profile.image_48,
     });
 
     // await say(resp.transMsg);
+  } else {
+    console.log("Not tracked channel, or skipped");
   }
 });
