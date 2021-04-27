@@ -30,6 +30,7 @@ app.message(async ({ message, client }) => {
 
   if (msgKeys.includes("previous_message")) {
     skip = true;
+    console.log(`Message format not recognized, probably an edited message`);
   }
   // console.log(`Message received: ${message.text}`);
 
@@ -41,12 +42,23 @@ app.message(async ({ message, client }) => {
 
       // get id of channels of interest
       for (let i = 0; i < fromToTable.length; i++) {
-        fromToTable[i].fromId = chanList.channels.find(function (chan, index) {
+        let fromChan = chanList.channels.find(function (chan, index) {
           if (chan.name == fromToTable[i].from) return true;
-        }).id;
-        fromToTable[i].toId = chanList.channels.find(function (chan, index) {
+        });
+        if (typeof fromChan !== "undefined") {
+          fromToTable[i].fromId = fromChan.id;
+        } else {
+          fromToTable[i].fromId = "";
+        }
+
+        let toChan = chanList.channels.find(function (chan, index) {
           if (chan.name == fromToTable[i].to) return true;
-        }).id;
+        });
+        if (typeof toChan !== "undefined") {
+          fromToTable[i].toId = toChan.id;
+        } else {
+          fromToTable[i].toId = "";
+        }
       }
     } catch (error) {
       console.error(error);
@@ -81,7 +93,7 @@ app.message(async ({ message, client }) => {
       // console.log("translate message");
       var fromLanguage = detectLang(
         (text = message.text),
-        (japPropThresh = 0.10),
+        (japPropThresh = 0.1),
         (verbose = true)
       );
     } catch (error) {
