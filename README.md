@@ -16,12 +16,16 @@ The Slack API require some authorization to be able to receive and send messages
 - go to the "Socket Mode" page
 - Click on "Enable Socket Mode" button
 - Give a name to your app token
-- Copy and paste your token in a text file name `.env` like this:
+- Copy and paste your token in a text file name `.env` placed in the the repository like this:
 
 ```
 SLACK_APP_TOKEN = 'xapp-1-XXXXXXXXXXXXXXXXXX'
 ```
 
+<img src="img/socketMode_1.png" alt="socketMode_1" width="400"/>
+<img src="img/socketMode_2.png" alt="socketMode_" width="400"/>
+<img src="img/socketMode_3.png" alt="socketMode_3" width="400"/>
+<img src="img/socketMode_4.png" alt="socketMode_4" width="400"/>
 
 ### Event subscription
 
@@ -30,6 +34,11 @@ SLACK_APP_TOKEN = 'xapp-1-XXXXXXXXXXXXXXXXXX'
 - Click on the "Enable Events" button
 - On the "Subscribe to bots events" click on "Add Bot User events" and add "message.channels" event
 - Save your changes by clicking on the button at the bottom of the page
+
+<img src="img/EventSub_1.png" alt="EventSub_1" width="400"/>
+<img src="img/EventSub_2.png" alt="EventSub_2" width="400"/>
+<img src="img/EventSub_3.png" alt="EventSub_3" width="400"/>
+<img src="img/EventSub_4.png" alt="EventSub_4" width="400"/>
 
 ### Permissions
 
@@ -50,6 +59,11 @@ SLACK_APP_TOKEN = 'xapp-1-XXXXXXXXXXXXXXXXXX'
 SLACK_APP_TOKEN = 'xapp-1-XXXXXXXXXXXXXXXXXX'
 BOT_TOKEN = 'xoxb-XXXXXXXXXXXXXXXXXX'
 ```
+
+<img src="img/permission_1.png" alt="permission_1" width="400"/>
+<img src="img/permission_2.png" alt="permission_2" width="400"/>
+<img src="img/permission_3.png" alt="permission_3" width="400"/>
+<img src="img/permission_4.png" alt="permission_4" width="400"/>
 
 ## DeepL API
 
