@@ -66,10 +66,8 @@ DEEPLKEY = 'XXXXXXXXXXXXXXXXXX'
 
 ## Install 
 
-Complete [SlackAutotranslate.service](./SlackAutotranslate.service) file and copy it into `/etc/systemd/system`.
-
-Start it with `systemctl start SlackAutotranslate`.
-
-Enable it to run on boot with `systemctl enable SlackAutotranslate`.
-
-See logs with `journalctl -u SlackAutotranslate`.
+- Complete [SlackAutotranslate.service](./SlackAutotranslate.service) file and copy it into `/etc/systemd/system`.
+- Change lines `8 ~ 12` of the file `index.js` to specify the channels you want to track
+- Start it with `systemctl start SlackAutotranslate`.
+- Enable it to run on boot with `systemctl enable SlackAutotranslate`.
+- See logs with `journalctl -u SlackAutotranslate`.
