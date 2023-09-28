@@ -4,7 +4,6 @@ require("dotenv").config("./.env");
 const translate = require("./translate.js");
 const detectLang = require("./detectLang.js");
 const { App } = require("@slack/bolt");
-console.log(process.env.CHANNEL_LISTS)
 var fromToTable = []
 if (process.env.CHANNEL_LISTS !== undefined && process.env.CHANNEL_LISTS.length>0){
   let splitArr = process.env.CHANNEL_LISTS.split(',')
@@ -15,7 +14,7 @@ if (process.env.CHANNEL_LISTS !== undefined && process.env.CHANNEL_LISTS.length>
     }
     
   }
-  console.log(fromToTable)
+  console.log("found channels from env",fromToTable)
 }else{
   fromToTable = [
     { from: "general", to: "general-autotranslate" },
