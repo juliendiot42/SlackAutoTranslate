@@ -85,3 +85,19 @@ DEEPLKEY = 'XXXXXXXXXXXXXXXXXX'
 - Start it with `systemctl start SlackAutotranslate`.
 - Enable it to run on boot with `systemctl enable SlackAutotranslate`.
 - See logs with `journalctl -u SlackAutotranslate`.
+
+## Container
+Build:
+
+```docker build . -t juliendiot42/slack-auto-translate:latest ```
+
+Run:
+
+```docker run  -it juliendiot42/slack-auto-translate:latest ```
+
+Set environment variables:
+- BOT_TOKEN: bot token
+- SLACK_APP_TOKEN: slack api token
+- CHANNEL_LISTS: "from_channel:to_channel,2nd_chan_from:2nd_chan_to"
+
+see docker-compose.yml as reference

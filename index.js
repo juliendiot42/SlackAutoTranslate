@@ -4,12 +4,28 @@ require("dotenv").config("./.env");
 const translate = require("./translate.js");
 const detectLang = require("./detectLang.js");
 const { App } = require("@slack/bolt");
+console.log(process.env.CHANNEL_LISTS)
+var fromToTable = []
+if (process.env.CHANNEL_LISTS !== undefined && process.env.CHANNEL_LISTS.length>0){
+  let splitArr = process.env.CHANNEL_LISTS.split(',')
+  for (let index = 0; index < splitArr.length; index++) {
+    let pair = splitArr[index].split(":");
+    if (pair.length == 2){
+      fromToTable.push({from:pair[0], to: pair[1]})
+    }
+    
+  }
+  console.log(fromToTable)
+}else{
+  fromToTable = [
+    { from: "general", to: "general-autotranslate" },
+    { from: "test-auto-translate", to: "test-auto-translate-2" },
+    { from: "random", to: "random-autotranslate" },
+  ];
+  
+}
 
-var fromToTable = [
-  { from: "general", to: "general-autotranslate" },
-  { from: "test-auto-translate", to: "test-auto-translate-2" },
-  { from: "random", to: "random-autotranslate" },
-];
+
 
 const app = new App({
   token: process.env.BOT_TOKEN,
