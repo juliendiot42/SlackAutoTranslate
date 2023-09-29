@@ -7,5 +7,6 @@ services:
     environment:
       BOT_TOKEN: someApiToken
       SLACK_APP_TOKEN: someToken
+      DEEPLKEY: someDeeplToken
       CHANNEL_LISTS: "from_channel:to_channel,2nd_chan_from:2nd_chan_to"
     restart: always

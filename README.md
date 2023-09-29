@@ -89,15 +89,21 @@ DEEPLKEY = 'XXXXXXXXXXXXXXXXXX'
 ## Container
 Build:
 
-```docker build . -t juliendiot42/slack-auto-translate:latest ```
+`docker build . -t juliendiot42/slack-auto-translate:latest `
 
 Run:
 
-```docker run  -it juliendiot42/slack-auto-translate:latest ```
+``` 
+docker run  -d juliendiot42/slack-auto-translate:latest  \ 
+-e BOT_TOKEN=someToken -e SLACK_APP_TOKEN=someOtherToken -e DEEPLKEY=someDeeplToken \ 
+-e CHANNEL_LISTS=from_channel:to_channel,2nd_chan_from:2nd_chan_to 
+```
 
 Set environment variables:
 - BOT_TOKEN: bot token
 - SLACK_APP_TOKEN: slack api token
+- DEEPLKEY: deeply token
 - CHANNEL_LISTS: "from_channel:to_channel,2nd_chan_from:2nd_chan_to"
+
 
 see docker-compose.yml as reference

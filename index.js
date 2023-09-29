@@ -16,12 +16,8 @@ if (process.env.CHANNEL_LISTS !== undefined && process.env.CHANNEL_LISTS.length>
   }
   console.log("found channels from env",fromToTable)
 }else{
-  fromToTable = [
-    { from: "general", to: "general-autotranslate" },
-    { from: "test-auto-translate", to: "test-auto-translate-2" },
-    { from: "random", to: "random-autotranslate" },
-  ];
-  
+  console.error("no channels defined!")
+  process.exit(1)
 }
 
 
