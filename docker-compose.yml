@@ -1,0 +1,12 @@
+version: "3.5"
+
+services:
+  slack_translate:
+    image: juliendiot42/slack-auto-translate:latest
+    container_name: "slack-auto-translate"
+    environment:
+      BOT_TOKEN: someApiToken
+      SLACK_APP_TOKEN: someToken
+      DEEPLKEY: someDeeplToken
+      CHANNEL_LISTS: "from_channel:to_channel,2nd_chan_from:2nd_chan_to"
+    restart: always
